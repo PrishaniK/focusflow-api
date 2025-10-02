@@ -39,15 +39,11 @@ focusflow-api/
 ├─ manage.py
 └─ db.sqlite3 # local dev DB (ignored in production)
 
-yaml
-Copy code
-
 ---
 
 ## Getting started (local)
 
 > You can run this with or without a virtual environment.  
-> Installing globally for your user is fine for the capstone.
 
 ### 1) Install dependencies
 ```bash
