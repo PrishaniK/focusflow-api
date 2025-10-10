@@ -20,6 +20,7 @@ from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from planner.views import SubjectViewSet, TopicViewSet, TaskViewSet, SessionViewSet
+from planner.views_me import me_summary, me_blueprint
 
 router = DefaultRouter()
 router.register("subjects", SubjectViewSet)
@@ -34,4 +35,6 @@ urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
     path("", include(router.urls)),
+    path("me/summary/", me_summary),
+    path("me/blueprint/", me_blueprint),
 ]
