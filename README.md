@@ -1,148 +1,224 @@
-# FocusFlow API
+# 🧭 FocusFlow API  
+*A timeline-agnostic study-planning API built with Django & Django REST Framework.*
 
-A timeline-agnostic study planner API built with **Django + Django REST Framework**.  
-Learners can create **Subjects → Topics → Tasks**, run **timed Sessions**, and (next) get analytics like a weekly **Study Blueprint**.
-
-- **Docs (Swagger):** `/api/docs/`
-- **Auth:** JWT (`/auth/jwt/create/`, `/auth/jwt/refresh/`)
+Learners can create **Subjects → Topics → Tasks**, run timed **Sessions**, and view analytics such as a weekly **Study Summary** and a **Study Blueprint** that ranks upcoming tasks by priority, difficulty, recency, and urgency.
 
 ---
 
-## Features (current MVP)
-- JWT auth with per-user data isolation
-- CRUD for **Subjects, Topics, Tasks**
-- **Sessions**: start (`POST /sessions/`) and stop (`PATCH /sessions/{id}/stop/`) with minutes auto-computed
-- Pagination (page number), standard error format, OpenAPI schema
+## 🌍 Live Documentation
 
-**Coming next**
-- `/me/summary` (window minutes, streak, due soon)
-- `/me/blueprint` (deadline-optional “next up” ranking)
-- Filters/search/ordering polish, basic tests, deployment
+**Swagger UI:** `/api/docs/`  
+**Auth endpoints:**
+- `POST /auth/jwt/create/` – obtain access & refresh tokens  
+- `POST /auth/jwt/refresh/` – renew access token  
 
 ---
 
-## Tech stack
-- Python • Django • Django REST Framework
-- djangorestframework-simplejwt (JWT auth)
-- drf-spectacular (OpenAPI/Swagger)
+## ✨ Features
+
+✅ JWT authentication with per-user data isolation  
+✅ CRUD for Subjects, Topics, Tasks  
+✅ Session tracking — start/stop focus sessions, auto-calculate minutes  
+✅ User analytics:
+- `/me/summary` — study streak, weekly window minutes, due-soon tasks  
+- `/me/blueprint` — “next up” task ranking heuristic  
+✅ Pagination, filtering, and OpenAPI documentation (via drf-spectacular)  
+✅ Unique constraints: no duplicate subject names per user  
+✅ Consistent error schema & status codes  
 
 ---
 
-## Project structure
+## 🧠 Architecture Overview
+
+### ERD (conceptual)
+
+User ───< Subject ───< Topic ───< Task ───< Session
+
+
+Each record belongs to a user.  
+Deleting higher-level objects (like Topics or Tasks) preserves related Sessions to retain study history.
+
+---
+
+## 🧰 Tech Stack
+
+| Layer | Tools / Libraries |
+|-------|-------------------|
+| Core | Python 3.13, Django 5 |
+| API | Django REST Framework (DRF) |
+| Auth | djangorestframework-simplejwt |
+| Docs | drf-spectacular |
+| Filters | django-filter |
+| DB | SQLite (dev), PostgreSQL (recommended for prod) |
+
+---
+
+## 🗂️ Project Structure
+
 focusflow-api/
-├─ config/ # Django project (settings/urls)
-├─ planner/ # App with models/serializers/views
+├─ config/ # Django project (settings, urls, wsgi)
+├─ planner/ # Main app (models, serializers, views)
 │ ├─ models.py # Subject, Topic, Task, Session
 │ ├─ serializers.py
 │ ├─ views.py
+│ ├─ views_me.py # /me/summary & /me/blueprint endpoints
+│ ├─ analytics.py # Streaks, recency, heuristics
 │ └─ migrations/
 ├─ manage.py
-└─ db.sqlite3 # local dev DB (ignored in production)
+└─ db.sqlite3 # Local dev database (ignored in prod)
+
 
 ---
 
-## Getting started (local)
+## 🚀 Getting Started (Local Setup)
 
-> You can run this with or without a virtual environment.  
+You can run this either globally or inside a virtual environment.
 
-### 1) Install dependencies
+### 1️⃣ Install dependencies
+
+**Windows**
 ```bash
-# Windows
-py -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular
-# macOS/Linux
-python3 -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular
-2) Migrate & create a user
-bash
-Copy code
+py -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular django-filter
+
+
+macOS / Linux
+
+python3 -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular django-filter
+
+2️⃣ Migrate & create an admin user
 python manage.py migrate
 python manage.py createsuperuser
-3) Run
-bash
-Copy code
+
+3️⃣ Run the API
 python manage.py runserver
-Open http://127.0.0.1:8000/api/docs/
 
-Auth (JWT)
+
+Visit → http://127.0.0.1:8000/api/docs/
+
+Authentication (JWT)
+Create token
 POST /auth/jwt/create/
+{
+  "username": "YOUR_USERNAME",
+  "password": "YOUR_PASSWORD"
+}
 
-json
-Copy code
-{ "username": "YOUR_USERNAME", "password": "YOUR_PASSWORD" }
-→ {"access": "...", "refresh": "..."}
 
+Response:
+
+{ "access": "...", "refresh": "..." }
+
+Refresh token
 POST /auth/jwt/refresh/
-
-json
-Copy code
 { "refresh": "..." }
-→ {"access": "..."}
 
-Use the access token in Swagger’s Authorize dialog as:
 
-php-template
-Copy code
-Bearer <access token>
-Quickstart (create minimal data)
-Subject
+Use your access token in Swagger Authorize → Bearer <access>
 
-http
-Copy code
+Quickstart Example
+1️. Create a Subject
 POST /subjects/
 { "name": "Mathematics", "color": "#1E90FF" }
-Topic
 
-http
-Copy code
+2. Create a Topic
 POST /topics/
 { "subject": 1, "title": "Eigenvalues", "status": "TODO", "struggle_level": 2 }
-Task
 
-http
-Copy code
+3️. Create a Task
 POST /tasks/
 { "topic": 1, "title": "Past paper Q1–Q3", "priority": 3, "status": "TODO" }
-Session → Stop
 
-http
-Copy code
-POST  /sessions/          { "task": 1 }
-PATCH /sessions/1/stop/   // minutes will be computed
-Complete a task (optional)
+4️. Start & Stop a Session
+POST /sessions/
+{ "task": 1 }
 
-http
-Copy code
+PATCH /sessions/1/stop/
+
+
+Minutes are automatically computed from start → stop.
+
+5️5. Mark a Task as Complete
 PATCH /tasks/1/complete/
-API conventions
-Pagination: page number (default size 20)
 
-Status codes: 201 create, 200 read/update, 204 delete, 400/401/403/404 errors
+Analytics Endpoints
+Study Summary
+GET /me/summary/
 
-Error body: { "detail": "...", "code": "..." }
 
-Enums: status = TODO | DOING | DONE, priority = 1..3, struggle_level = 0..3
+Returns:
 
-Development notes
-All querysets are scoped to the authenticated user (privacy).
+{
+  "window_days": 7,
+  "window_mins": 120,
+  "streak": 3,
+  "recent_activity": [
+    {"date": "2025-10-04", "minutes": 30},
+    {"date": "2025-10-05", "minutes": 45}
+  ],
+  "due_soon": [
+    {"title": "Essay draft", "due_date": "2025-10-15"}
+  ]
+}
 
-Session.minutes is computed on stop (server-side, not client-supplied).
+Study Blueprint
+GET /me/blueprint/
 
-Deleting a Topic/Task keeps related Sessions (FK set to NULL) to preserve history.
+
+Heuristic:
+
+score = 0.45·priority + 0.30·struggle + 0.15·recency + 0.10·urgency
+
+
+Returns a list of tasks sorted by “next best to study”.
+
+API Conventions
+Concept	Description
+Pagination	Page-number (default size: 20)
+Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
+Error Schema	{ "detail": "...", "code": "..." }
+Enums	`status = TODO
+Development Notes
+
+All queries are scoped to the authenticated user (data privacy).
+
+Session.minutes is computed server-side — clients cannot tamper with it.
+
+Deleting Topics or Tasks does not cascade delete Sessions (to keep history).
+
+Analytics are lightweight, computed on demand, and cache-ready.
 
 Roadmap
-GET /me/summary (rolling window minutes, streak, recent activity, due soon)
+Milestone	Status
+Core CRUD & JWT auth	Complete
+Sessions (start/stop)	Complete
+Analytics /me/summary & /me/blueprint	Complete
+Filtering & search polish	In progress
+Unit tests for ownership/actions/schema	In progress
+Deployment (Render / PythonAnywhere)	Planned
+Commit Style
 
-GET /me/blueprint (priority/struggle/recency/urgency heuristic; deadline-optional)
+Follow Conventional Commits:
 
-Filtering/search/ordering with django-filter
+Prefix	Meaning
+feat:	new feature
+fix:	bug fix
+docs:	documentation change
+test:	test added/updated
+chore:	maintenance or config
 
-Basic tests (ownership, actions, schema)
-
-Deployment (PythonAnywhere / Render)
-
-Commit style
-Use conventional prefixes:
-
-feat:, fix:, docs:, test:, chore:
 Example:
-feat(api): add sessions stop action with minutes computation
 
+feat(api): add session stop action with auto minutes calculation
+
+Originality & Purpose
+
+FocusFlow was built from scratch for the ALX Back-End Capstone.
+It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
+
+No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
+
+License & Credits
+
+© 2025 – ALX Back-End Capstone Project
+Developed by Prishani Kisten
+Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
