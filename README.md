@@ -67,7 +67,7 @@ focusflow-api/
 │  └─ migrations/
 ├─ manage.py
 └─ db.sqlite3           # Local dev database (ignored in prod)
-
+```
 ---
 
 ## Getting Started (Local Setup)
@@ -94,7 +94,7 @@ python manage.py runserver
 Open: http://127.0.0.1:8000/api/docs/
 
 ## Authentication (JWT)
-You can register, log in, and authenticate directly through the API — no admin panel required.
+You can register, log in, and authenticate directly through the API - no admin panel required.
 
 ### 1. Register a new account (public)
 
@@ -275,7 +275,7 @@ Response:
   }
 ]
 
-Field ranges & enums (so Swagger’s placeholders don’t confuse you)
+#### Field ranges & enums (so Swagger’s placeholders don’t confuse you)
 - status: "TODO" | "DOING" | "DONE"
 - priority: integer 1..3 (default 2)
 - struggle_level: integer 0..3 (default 0)
@@ -291,8 +291,7 @@ Enums	`status = TODO
 Development Notes
 
 All queries are scoped to the authenticated user (data privacy).
-
-Session.minutes is computed server-side — clients cannot tamper with it.
+Session.minutes is computed server-side - clients cannot tamper with it.
 
 Deleting Topics or Tasks does not cascade delete Sessions (to keep history).
 
