@@ -9,8 +9,8 @@ Learners can create **Subjects → Topics → Tasks**, run timed **Sessions**, a
 
 **Swagger UI:** `/api/docs/`  
 **Auth endpoints:**
-- `POST /auth/jwt/create/` – obtain access & refresh tokens  
-- `POST /auth/jwt/refresh/` – renew access token  
+- `POST /auth/jwt/create/` - obtain access & refresh tokens  
+- `POST /auth/jwt/refresh/` - renew access token  
 
 ---
 
@@ -18,10 +18,10 @@ Learners can create **Subjects → Topics → Tasks**, run timed **Sessions**, a
 
 ✅ JWT authentication with per-user data isolation  
 ✅ CRUD for Subjects, Topics, Tasks  
-✅ Session tracking — start/stop focus sessions, auto-calculate minutes  
+✅ Session tracking - start/stop focus sessions, auto-calculate minutes  
 ✅ User analytics:
-- `/me/summary` — study streak, weekly window minutes, due-soon tasks  
-- `/me/blueprint` — “next up” task ranking heuristic  
+- `/me/summary` - study streak, weekly window minutes, due-soon tasks  
+- `/me/blueprint` - “next up” task ranking heuristic  
 ✅ Pagination, filtering, and OpenAPI documentation (via drf-spectacular)  
 ✅ Unique constraints: no duplicate subject names per user  
 ✅ Consistent error schema & status codes  
@@ -56,16 +56,17 @@ Deleting higher-level objects (like Topics or Tasks) preserves related Sessions 
 ## 🗂️ Project Structure
 
 focusflow-api/
-├─ config/ # Django project (settings, urls, wsgi)
-├─ planner/ # Main app (models, serializers, views)
-│ ├─ models.py # Subject, Topic, Task, Session
-│ ├─ serializers.py
-│ ├─ views.py
-│ ├─ views_me.py # /me/summary & /me/blueprint endpoints
-│ ├─ analytics.py # Streaks, recency, heuristics
-│ └─ migrations/
+├─ config/              # Django project (settings, urls, wsgi)
+├─ planner/             # Main app (models, serializers, views)
+│  ├─ models.py         # Subject, Topic, Task, Session
+│  ├─ serializers.py
+│  ├─ views.py
+│  ├─ views_me.py       # /me/summary & /me/blueprint endpoints
+│  ├─ analytics.py      # Streaks, recency, heuristics
+│  └─ migrations/
 ├─ manage.py
-└─ db.sqlite3 # Local dev database (ignored in prod)
+└─ db.sqlite3           # Local dev database (ignored in prod)
+
 
 
 ---
@@ -126,7 +127,7 @@ POST /topics/
 
 3️. Create a Task
 POST /tasks/
-{ "topic": 1, "title": "Past paper Q1–Q3", "priority": 3, "status": "TODO" }
+{ "topic": 1, "title": "Past paper Q1-Q3", "priority": 3, "status": "TODO" }
 
 4️. Start & Stop a Session
 POST /sessions/
@@ -219,6 +220,6 @@ No frontend is required for this capstone; the API is fully testable via Swagger
 
 License & Credits
 
-© 2025 – ALX Back-End Capstone Project
+© 2025 - ALX Back-End Capstone Project
 Developed by Prishani Kisten
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
