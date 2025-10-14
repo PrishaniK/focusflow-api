@@ -3,7 +3,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
 from .analytics import window_minutes, study_streak, due_soon_tasks, blueprint
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(tags=["me"])
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me_summary(request):
@@ -49,6 +51,7 @@ def me_summary(request):
         "due_soon": due,
     })
 
+@extend_schema(tags=["me"])
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def me_blueprint(request):

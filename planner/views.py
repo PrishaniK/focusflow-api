@@ -5,7 +5,9 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Subject, Topic, Task, Session
 from .serializers import SubjectSerializer, TopicSerializer, TaskSerializer, SessionSerializer
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(tags=["tasks"])
 class OwnedViewSet(viewsets.ModelViewSet):
     """
     Base ViewSet that enforces per-user data isolation.
@@ -25,6 +27,7 @@ class OwnedViewSet(viewsets.ModelViewSet):
         # Never trust the client to set `user`; we set it server-side.
         serializer.save(user=self.request.user)
 
+@extend_schema(tags=["subjects"])
 class SubjectViewSet(OwnedViewSet):
     """
     CRUD for Subjects (e.g., Mathematics, Biology).
@@ -32,7 +35,8 @@ class SubjectViewSet(OwnedViewSet):
     """
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer
-    
+
+@extend_schema(tags=["topics"])   
 class TopicViewSet(OwnedViewSet):
     """
     CRUD for Topics (e.g., Eigenvalues under Mathematics).
@@ -48,6 +52,7 @@ class TopicViewSet(OwnedViewSet):
     filterset_fields = ("subject", "status")
     search_fields = ("title",)
 
+@extend_schema(tags=["tasks"])
 class TaskViewSet(OwnedViewSet):
     """
     CRUD for Tasks (concrete study actions).
@@ -77,6 +82,7 @@ class TaskViewSet(OwnedViewSet):
         task.save()
         return Response(self.get_serializer(task).data, status=status.HTTP_200_OK)
 
+@extend_schema(tags=["sessions"])
 class SessionViewSet(OwnedViewSet):
     """
     CRUD for Sessions (timed focus blocks).

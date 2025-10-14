@@ -25,3 +25,9 @@ class RegisterSerializer(serializers.ModelSerializer):
         if User.objects.filter(username=value).exists():
             raise serializers.ValidationError("Username is already taken.")
         return value
+
+# (tiny output serializer so /auth/register/ shows a clean response body in Swagger)
+class UserOut(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ("id", "username", "email")

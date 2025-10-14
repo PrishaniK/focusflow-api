@@ -17,6 +17,16 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from planner.views import SubjectViewSet, TopicViewSet, TaskViewSet, SessionViewSet
 from planner.views_me import me_summary, me_blueprint
 from accounts.views import RegisterView
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from drf_spectacular.utils import extend_schema
+
+@extend_schema(tags=["auth"], summary="Obtain JWT access & refresh tokens")
+class TaggedTokenObtainPairView(TokenObtainPairView):
+    pass
+
+@extend_schema(tags=["auth"], summary="Refresh expired access token using refresh token")
+class TaggedTokenRefreshView(TokenRefreshView):
+    pass
 
 # ---------------------------------------------------------------------------
 # DRF ROUTER
@@ -45,9 +55,9 @@ urlpatterns = [
     # ---------- Auth (JWT) ----------
     path("auth/register/", RegisterView.as_view()),
     # Obtain a pair of tokens (access + refresh) by POSTing valid credentials.
-    path("auth/jwt/create/", TokenObtainPairView.as_view()),
+    path('auth/jwt/create/', TaggedTokenObtainPairView.as_view()),
     # Refresh the short-lived access token using a valid refresh token.
-    path("auth/jwt/refresh/", TokenRefreshView.as_view()),
+    path('auth/jwt/refresh/', TaggedTokenRefreshView.as_view()),
     
     # ---------- API Schema & Docs ----------
     # Raw OpenAPI 3 schema (JSON). Useful for tooling/clients.

@@ -77,97 +77,72 @@ You can run this either globally or inside a virtual environment.
 ### 1️. Install dependencies
 
 **Windows**
-```bash
 py -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular django-filter
 
 
-macOS / Linux
-
+**macOS / Linux**
 python3 -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular django-filter
 
-2️. Migrate & create an admin user
+### 2️. Migrate & create an admin user
 python manage.py migrate
 python manage.py createsuperuser
 
-3️. Run the API
+### 3️. Run the API
 python manage.py runserver
 
 
-Visit → http://127.0.0.1:8000/api/docs/
+Open: http://127.0.0.1:8000/api/docs/
 
-Authentication (JWT)
-
+## Authentication (JWT)
 You can register, log in, and authenticate directly through the API — no admin panel required.
 
 ### 1. Register a new account (public)
 
-```http
 POST /auth/register/
-
-POST /auth/register/ – create a new account (public)
-
-Then POST /auth/jwt/create/ - to obtain tokens
-
-Request
-
+Request:
 {
   "username": "learner1",
   "email": "l1@example.com",
   "password": "supersecure123"
 }
 
+Response:
+201 Created
+{ "id": 2, "username": "learner1", "email": "l1@example.com" }
 
-Response
-
-{
-  "id": 2,
-  "username": "learner1",
-  "email": "l1@example.com"
-}
-
-2️. Obtain tokens (login)
+### 2. Obtain tokens (login)
 POST /auth/jwt/create/
-
-
-Request
-
-{
-  "username": "learner1",
-  "password": "supersecure123"
+Request:
+{ 
+  "username": "learner1", 
+  "password": "supersecure123" 
 }
 
+Response:
+200 OK
+{ "access": "…", "refresh": "…" }
 
-Response
 
-{
-  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-
-3. Refresh access token
+### 3. Refresh access token
 POST /auth/jwt/refresh/
-
-
-Request
-
+Request:
 {
   "refresh": "your-refresh-token-here"
 }
 
-
 Response
-
+200 OK
 {
   "access": "new-access-token"
 }
 
-4️. Authorize in Swagger
+### 4️. Authorize in Swagger
 
 Visit http://127.0.0.1:8000/api/docs/
  → click Authorize →
 enter your token as:
 
-Bearer your-access-token
+Bearer <your-access-token>
 
 You can now access all authenticated endpoints:
 
@@ -178,80 +153,134 @@ You can now access all authenticated endpoints:
 /me/summary/
 /me/blueprint/
 
-Create token
-POST /auth/jwt/create/
-{
-  "username": "YOUR_USERNAME",
-  "password": "YOUR_PASSWORD"
-}
-
-
-Response:
-
-{ "access": "...", "refresh": "..." }
-
-Refresh token
-POST /auth/jwt/refresh/
-{ "refresh": "..." }
-
-
-Use your access token in Swagger Authorize → Bearer <access>
 
 Quickstart Example
 1️. Create a Subject
 POST /subjects/
-{ "name": "Mathematics", "color": "#1E90FF" }
+Request:
+{ 
+  "name": "Mathematics", 
+  "color": "#1E90FF" 
+}
+Response:
+201 Created
+{ "id": 1, "name": "Mathematics", "color": "#1E90FF", "user": 2 }
 
 2. Create a Topic
 POST /topics/
-{ "subject": 1, "title": "Eigenvalues", "status": "TODO", "struggle_level": 2 }
+Request:
+{ 
+  "title": "Eigenvalues & Eigenvectors",
+  "status": "TODO", 
+  "struggle_level": 2 
+  "subject": 1 
+}
+Response:
+201 Created
+{ "id": 1, "subject": 1, "title": "Eigenvalues & Eigenvectors", "status": "TODO", "struggle_level": 2, "user": 2 }
 
-3️. Create a Task
+3️. Create a Task (inside a topic)
+- priority: 1..3 (3 = most important)
+- status: "TODO" | "DOING" | "DONE"
+- due_date: optional ISO date YYYY-MM-DD
 POST /tasks/
-{ "topic": 1, "title": "Past paper Q1-Q3", "priority": 3, "status": "TODO" }
+Request:
+{ 
+  "title": "Past paper Q1–Q3", 
+  "due_date": "2025-10-20", 
+  "priority": 3, 
+  "status": "TODO", 
+  "notes": "", 
+  "topic": 1 
+}
 
-4️. Start & Stop a Session
+Response:
+201 Created
+{
+  "id": 1, "topic": 1, "title": "Past paper Q1–Q3",
+  "priority": 3, "status": "TODO", "due_date": "2025-10-20",
+  "notes": "", "user": 2
+}
+
+4️. Sessions (track focused study time)
 POST /sessions/
-{ "task": 1 }
+Request:
+{ 
+  "notes": "Pomodoro #1", 
+  "topic": 1, 
+  "task": 1 
+}
 
+Response:
+201 Created
+{
+  "id": 1, "task": 1, "topic": 1,
+  "started_at": "2025-10-14T12:00:00Z",
+  "ended_at": null, "minutes": 0, "notes": "Pomodoro #1", "user": 2
+}
+
+Stop the session - minutes are computed server-side.
 PATCH /sessions/1/stop/
 
-
 Minutes are automatically computed from start → stop.
+Response:
+200 OK
+{
+  "id": 1, "task": 1, "topic": 1,
+  "started_at": "2025-10-14T12:00:00Z",
+  "ended_at": "2025-10-14T12:42:12Z",
+  "minutes": 43, "notes": "Pomodoro #1", "user": 2
+}
 
-5. Mark a Task as Complete
-PATCH /tasks/1/complete/
+5. Analytics (“Me”)
+GET /me/summary/?window_days=7
 
-Analytics Endpoints
-Study Summary
-GET /me/summary/
-
-
-Returns:
-
+Response:
 {
   "window_days": 7,
   "window_mins": 120,
   "streak": 3,
   "recent_activity": [
-    {"date": "2025-10-04", "minutes": 30},
-    {"date": "2025-10-05", "minutes": 45}
+    { "date": "2025-10-08", "minutes": 0 },
+    { "date": "2025-10-09", "minutes": 45 },
+    { "date": "2025-10-10", "minutes": 0 },
+    { "date": "2025-10-11", "minutes": 30 },
+    { "date": "2025-10-12", "minutes": 0 },
+    { "date": "2025-10-13", "minutes": 45 },
+    { "date": "2025-10-14", "minutes": 0 }
   ],
   "due_soon": [
-    {"title": "Essay draft", "due_date": "2025-10-15"}
+    { "id": 1, "title": "Past paper Q1–Q3", "due_date": "2025-10-20", "priority": 3, "topic_id": 1 }
   ]
 }
 
-Study Blueprint
-GET /me/blueprint/
+GET /me/blueprint/?limit=5
 
+Ranks next tasks using a deadline-optional score:
+0.45*priority + 0.30*struggle + 0.15*recency + 0.10*urgency
 
-Heuristic:
+Tie-breakers: earlier due → higher priority → least recently studied.
 
-score = 0.45·priority + 0.30·struggle + 0.15·recency + 0.10·urgency
+Response:
+200 OK
+[
+  {
+    "id": 1,
+    "title": "Past paper Q1–Q3",
+    "priority": 3,
+    "status": "TODO",
+    "due_date": "2025-10-20",
+    "topic_id": 1,
+    "score": 2.550000
+  }
+]
 
+Field ranges & enums (so Swagger’s placeholders don’t confuse you)
+- status: "TODO" | "DOING" | "DONE"
+- priority: integer 1..3 (default 2)
+- struggle_level: integer 0..3 (default 0)
+- due_date: optional; if absent, analytics still work (timeline-agnostic)
 
-Returns a list of tasks sorted by “next best to study”.
 
 API Conventions
 Concept	Description
@@ -289,18 +318,15 @@ test:	test added/updated
 chore:	maintenance or config
 
 Example:
-
 feat(api): add session stop action with auto minutes calculation
 
 Originality & Purpose
-
 FocusFlow was built from scratch for the ALX Back-End Capstone.
 It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
 
 No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
 
 License & Credits
-
 © 2025 - ALX Back-End Capstone Project
 Developed by Prishani
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'planner',
     'django_filters',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -143,7 +144,23 @@ REST_FRAMEWORK = {
 
 REST_FRAMEWORK["DEFAULT_FILTER_BACKENDS"] = ["django_filters.rest_framework.DjangoFilterBackend"]
 
-SPECTACULAR_SETTINGS = {"TITLE": "FocusFlow API", "VERSION": "0.1.0"}
+SPECTACULAR_SETTINGS = {
+    "TITLE": "FocusFlow API",
+    "VERSION": "0.1.0",
+    # keep our order, don't auto-sort
+    "SORT_TAGS": False,
+    "SORT_OPERATIONS": False,
+    # tag order + optional descriptions
+    "TAGS": [
+        {"name": "auth", "description": "Registration & JWT token endpoints"},
+        {"name": "subjects", "description": "Create and manage subjects"},
+        {"name": "topics", "description": "Topics under a subject"},
+        {"name": "tasks", "description": "Study tasks under a topic"},
+        {"name": "sessions", "description": "Start/stop focus sessions"},
+        {"name": "me", "description": "Analytics: summary & blueprint"},
+    ],
+}
+
 
 
 LOGGING = {
