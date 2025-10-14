@@ -172,15 +172,10 @@ Bearer your-access-token
 You can now access all authenticated endpoints:
 
 /subjects/
-
 /topics/
-
 /tasks/
-
 /sessions/
-
 /me/summary/
-
 /me/blueprint/
 
 Create token
