@@ -16,6 +16,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from planner.views import SubjectViewSet, TopicViewSet, TaskViewSet, SessionViewSet
 from planner.views_me import me_summary, me_blueprint
+from accounts.views import RegisterView
 
 # ---------------------------------------------------------------------------
 # DRF ROUTER
@@ -42,6 +43,7 @@ urlpatterns = [
     # Django admin (useful for manual data inspection during review).
     path('admin/', admin.site.urls),
     # ---------- Auth (JWT) ----------
+    path("auth/register/", RegisterView.as_view()),
     # Obtain a pair of tokens (access + refresh) by POSTing valid credentials.
     path("auth/jwt/create/", TokenObtainPairView.as_view()),
     # Refresh the short-lived access token using a valid refresh token.

@@ -1,11 +1,11 @@
-# 🧭 FocusFlow API  
+# FocusFlow API  
 *A timeline-agnostic study-planning API built with Django & Django REST Framework.*
 
 Learners can create **Subjects → Topics → Tasks**, run timed **Sessions**, and view analytics such as a weekly **Study Summary** and a **Study Blueprint** that ranks upcoming tasks by priority, difficulty, recency, and urgency.
 
 ---
 
-## 🌍 Live Documentation
+## Live Documentation
 
 **Swagger UI:** `/api/docs/`  
 **Auth endpoints:**
@@ -14,21 +14,21 @@ Learners can create **Subjects → Topics → Tasks**, run timed **Sessions**, a
 
 ---
 
-## ✨ Features
+## Features
 
-✅ JWT authentication with per-user data isolation  
-✅ CRUD for Subjects, Topics, Tasks  
-✅ Session tracking - start/stop focus sessions, auto-calculate minutes  
-✅ User analytics:
+- JWT authentication with per-user data isolation  
+- CRUD for Subjects, Topics, Tasks  
+- Session tracking - start/stop focus sessions, auto-calculate minutes  
+- User analytics:
 - `/me/summary` - study streak, weekly window minutes, due-soon tasks  
 - `/me/blueprint` - “next up” task ranking heuristic  
-✅ Pagination, filtering, and OpenAPI documentation (via drf-spectacular)  
-✅ Unique constraints: no duplicate subject names per user  
-✅ Consistent error schema & status codes  
+- Pagination, filtering, and OpenAPI documentation (via drf-spectacular)  
+- Unique constraints: no duplicate subject names per user  
+- Consistent error schema & status codes  
 
 ---
 
-## 🧠 Architecture Overview
+## Architecture Overview
 
 ### ERD (conceptual)
 
@@ -40,7 +40,7 @@ Deleting higher-level objects (like Topics or Tasks) preserves related Sessions 
 
 ---
 
-## 🧰 Tech Stack
+## Tech Stack
 
 | Layer | Tools / Libraries |
 |-------|-------------------|
@@ -53,7 +53,7 @@ Deleting higher-level objects (like Topics or Tasks) preserves related Sessions 
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```text
 focusflow-api/
@@ -70,11 +70,11 @@ focusflow-api/
 
 ---
 
-## 🚀 Getting Started (Local Setup)
+## Getting Started (Local Setup)
 
 You can run this either globally or inside a virtual environment.
 
-### 1️⃣ Install dependencies
+### 1️. Install dependencies
 
 **Windows**
 ```bash
@@ -85,17 +85,104 @@ macOS / Linux
 
 python3 -m pip install --user django djangorestframework djangorestframework-simplejwt drf-spectacular django-filter
 
-2️⃣ Migrate & create an admin user
+2️. Migrate & create an admin user
 python manage.py migrate
 python manage.py createsuperuser
 
-3️⃣ Run the API
+3️. Run the API
 python manage.py runserver
 
 
 Visit → http://127.0.0.1:8000/api/docs/
 
 Authentication (JWT)
+
+You can register, log in, and authenticate directly through the API — no admin panel required.
+
+### 1. Register a new account (public)
+
+```http
+POST /auth/register/
+
+POST /auth/register/ – create a new account (public)
+
+Then POST /auth/jwt/create/ - to obtain tokens
+
+Request
+
+{
+  "username": "learner1",
+  "email": "l1@example.com",
+  "password": "supersecure123"
+}
+
+
+Response
+
+{
+  "id": 2,
+  "username": "learner1",
+  "email": "l1@example.com"
+}
+
+2️. Obtain tokens (login)
+POST /auth/jwt/create/
+
+
+Request
+
+{
+  "username": "learner1",
+  "password": "supersecure123"
+}
+
+
+Response
+
+{
+  "access": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+
+3. Refresh access token
+POST /auth/jwt/refresh/
+
+
+Request
+
+{
+  "refresh": "your-refresh-token-here"
+}
+
+
+Response
+
+{
+  "access": "new-access-token"
+}
+
+4️. Authorize in Swagger
+
+Visit http://127.0.0.1:8000/api/docs/
+ → click Authorize →
+enter your token as:
+
+Bearer your-access-token
+
+You can now access all authenticated endpoints:
+
+/subjects/
+
+/topics/
+
+/tasks/
+
+/sessions/
+
+/me/summary/
+
+/me/blueprint/
+
 Create token
 POST /auth/jwt/create/
 {
@@ -137,7 +224,7 @@ PATCH /sessions/1/stop/
 
 Minutes are automatically computed from start → stop.
 
-5️5. Mark a Task as Complete
+5. Mark a Task as Complete
 PATCH /tasks/1/complete/
 
 Analytics Endpoints
