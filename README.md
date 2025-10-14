@@ -55,6 +55,7 @@ Deleting higher-level objects (like Topics or Tasks) preserves related Sessions 
 
 ## 🗂️ Project Structure
 
+```text
 focusflow-api/
 ├─ config/              # Django project (settings, urls, wsgi)
 ├─ planner/             # Main app (models, serializers, views)
@@ -66,8 +67,6 @@ focusflow-api/
 │  └─ migrations/
 ├─ manage.py
 └─ db.sqlite3           # Local dev database (ignored in prod)
-
-
 
 ---
 
@@ -221,5 +220,5 @@ No frontend is required for this capstone; the API is fully testable via Swagger
 License & Credits
 
 © 2025 - ALX Back-End Capstone Project
-Developed by Prishani Kisten
+Developed by Prishani
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
