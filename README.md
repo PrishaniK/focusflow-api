@@ -97,9 +97,11 @@ Open: http://127.0.0.1:8000/api/docs/
 You can register, log in, and authenticate directly through the API - no admin panel required.
 
 ### 1. Register a new account (public)
-
+```
 POST /auth/register/
+
 Request:
+
 {
   "username": "learner1",
   "email": "l1@example.com",
@@ -107,6 +109,7 @@ Request:
 }
 
 Response:
+
 201 Created
 { "id": 2, "username": "learner1", "email": "l1@example.com" }
 
@@ -124,14 +127,18 @@ Response:
 
 
 ### 3. Refresh access token
+
 POST /auth/jwt/refresh/
+
 Request:
 {
   "refresh": "your-refresh-token-here"
 }
 
 Response
+
 200 OK
+
 {
   "access": "new-access-token"
 }
@@ -155,20 +162,30 @@ You can now access all authenticated endpoints:
 
 
 Quickstart Example
+
 1️. Create a Subject
+
 POST /subjects/
+
 Request:
+
 { 
   "name": "Mathematics", 
   "color": "#1E90FF" 
 }
+
 Response:
+
 201 Created
+
 { "id": 1, "name": "Mathematics", "color": "#1E90FF", "user": 2 }
 
 2. Create a Topic
+
 POST /topics/
+
 Request:
+
 { 
   "title": "Eigenvalues & Eigenvectors",
   "status": "TODO", 
@@ -176,6 +193,7 @@ Request:
   "subject": 1 
 }
 Response:
+
 201 Created
 { "id": 1, "subject": 1, "title": "Eigenvalues & Eigenvectors", "status": "TODO", "struggle_level": 2, "user": 2 }
 
@@ -183,7 +201,9 @@ Response:
 - priority: 1..3 (3 = most important)
 - status: "TODO" | "DOING" | "DONE"
 - due_date: optional ISO date YYYY-MM-DD
+
 POST /tasks/
+
 Request:
 { 
   "title": "Past paper Q1–Q3", 
@@ -204,6 +224,7 @@ Response:
 
 4️. Sessions (track focused study time)
 POST /sessions/
+
 Request:
 { 
   "notes": "Pomodoro #1", 
@@ -274,6 +295,8 @@ Response:
     "score": 2.550000
   }
 ]
+
+```
 
 #### Field ranges & enums (so Swagger’s placeholders don’t confuse you)
 - status: "TODO" | "DOING" | "DONE"
