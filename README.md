@@ -304,6 +304,7 @@ Response:
 - struggle_level: integer 0..3 (default 0)
 - due_date: optional; if absent, analytics still work (timeline-agnostic)
 
+---
 
 - API Conventions
 - Concept	Description
@@ -341,13 +342,13 @@ Prefix	Meaning
 Example:
 feat(api): add session stop action with auto minutes calculation
 
-**Originality & Purpose**
+#### **Originality & Purpose**
 FocusFlow was built from scratch for the ALX Back-End Capstone.
 It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
 
 No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
 
-**License & Credits**
+#### **License & Credits**
 © 2025 - ALX Back-End Capstone Project
 Developed by Prishani
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
