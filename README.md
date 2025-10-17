@@ -305,13 +305,13 @@ Response:
 - due_date: optional; if absent, analytics still work (timeline-agnostic)
 
 
--API Conventions
--Concept	Description
--Pagination	Page-number (default size: 20)
--Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
--Error Schema	{ "detail": "...", "code": "..." }
--Enums	`status = TODO
--Development Notes
+- API Conventions
+- Concept	Description
+- Pagination	Page-number (default size: 20)
+- Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
+- Error Schema	{ "detail": "...", "code": "..." }
+- Enums	`status = TODO
+- Development Notes
 
 - All queries are scoped to the authenticated user (data privacy).
 - Session.minutes is computed server-side - clients cannot tamper with it.
@@ -332,11 +332,11 @@ Response:
 Follow Conventional Commits:
 
 Prefix	Meaning
--feat:	new feature
--fix:	bug fix
--docs:	documentation change
--test:	test added/updated
--chore:	maintenance or config
+- feat:	new feature
+- fix:	bug fix
+- docs:	documentation change
+- test:	test added/updated
+- chore:	maintenance or config
 
 Example:
 feat(api): add session stop action with auto minutes calculation
