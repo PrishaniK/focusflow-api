@@ -306,13 +306,22 @@ Response:
 
 ---
 
-- API Conventions
-- Concept	Description
-- Pagination	Page-number (default size: 20)
-- Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
-- Error Schema	{ "detail": "...", "code": "..." }
-- Enums	`status = TODO
+#### API Conventions
+
+- **Concept**: Description  
+- **Pagination**: Page-number (default size: 20)  
+- **Status Codes**:  
+  - 201 = Created  
+  - 200 = Success  
+  - 204 = Deleted  
+  - 400/401/403/404 = Error  
+- **Error Schema**:  
+  ```json
+  { "detail": "...", "code": "..." }
+- **Enums**:
+  - status = TODO
 - Development Notes
+
 
 - All queries are scoped to the authenticated user (data privacy).
 - Session.minutes is computed server-side - clients cannot tamper with it.
@@ -347,7 +356,6 @@ FocusFlow was built from scratch for the ALX Back-End Capstone.
 It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
 
 No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
- ---
 
 #### **License & Credits**
 © 2025 - ALX Back-End Capstone Project  <br>
