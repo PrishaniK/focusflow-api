@@ -347,8 +347,9 @@ FocusFlow was built from scratch for the ALX Back-End Capstone.
 It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
 
 No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
+ ---
 
 #### **License & Credits**
-© 2025 - ALX Back-End Capstone Project
-Developed by Prishani
+© 2025 - ALX Back-End Capstone Project  <br>
+Developed by Prishani  <br>
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
