@@ -305,50 +305,49 @@ Response:
 - due_date: optional; if absent, analytics still work (timeline-agnostic)
 
 
-API Conventions
-Concept	Description
-Pagination	Page-number (default size: 20)
-Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
-Error Schema	{ "detail": "...", "code": "..." }
-Enums	`status = TODO
-Development Notes
+-API Conventions
+-Concept	Description
+-Pagination	Page-number (default size: 20)
+-Status Codes	201 = created, 200 = success, 204 = deleted, 400/401/403/404 = error
+-Error Schema	{ "detail": "...", "code": "..." }
+-Enums	`status = TODO
+-Development Notes
 
-All queries are scoped to the authenticated user (data privacy).
-Session.minutes is computed server-side - clients cannot tamper with it.
+- All queries are scoped to the authenticated user (data privacy).
+- Session.minutes is computed server-side - clients cannot tamper with it.
+- Deleting Topics or Tasks does not cascade delete Sessions (to keep history).
+- Analytics are lightweight, computed on demand, and cache-ready.
 
-Deleting Topics or Tasks does not cascade delete Sessions (to keep history).
+**Roadmap**
+- Milestone	Status
+- Core CRUD & JWT auth	Complete
+- Sessions (start/stop)	Complete
+- Analytics /me/summary & /me/blueprint	Complete
+- Filtering & search polish	In progress
+- Unit tests for ownership/actions/schema	In progress
+- Deployment (Render / PythonAnywhere)	Planned
 
-Analytics are lightweight, computed on demand, and cache-ready.
-
-Roadmap
-Milestone	Status
-Core CRUD & JWT auth	Complete
-Sessions (start/stop)	Complete
-Analytics /me/summary & /me/blueprint	Complete
-Filtering & search polish	In progress
-Unit tests for ownership/actions/schema	In progress
-Deployment (Render / PythonAnywhere)	Planned
-Commit Style
+**Commit Style**
 
 Follow Conventional Commits:
 
 Prefix	Meaning
-feat:	new feature
-fix:	bug fix
-docs:	documentation change
-test:	test added/updated
-chore:	maintenance or config
+-feat:	new feature
+-fix:	bug fix
+-docs:	documentation change
+-test:	test added/updated
+-chore:	maintenance or config
 
 Example:
 feat(api): add session stop action with auto minutes calculation
 
-Originality & Purpose
+**Originality & Purpose**
 FocusFlow was built from scratch for the ALX Back-End Capstone.
 It demonstrates data modeling, authentication, analytics, and clean RESTful design - all within a purely backend context.
 
 No frontend is required for this capstone; the API is fully testable via Swagger or Postman, and designed to be easily integrated with a future frontend or mobile app.
 
-License & Credits
+**License & Credits**
 © 2025 - ALX Back-End Capstone Project
 Developed by Prishani
 Libraries: Django, Django REST Framework, drf-spectacular, simplejwt, django-filter.
